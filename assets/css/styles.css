@@ -1058,6 +1058,22 @@ section[id] {
   padding: 5rem 0 0;
   background: linear-gradient(180deg, #F5F5F5 0%, #1F443C 228.97%);
 }
+.site-footer .footer_group_link {
+  display: flex;
+  gap: 8rem;
+}
+.site-footer .footer_imp_links ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.site-footer .footer_imp_links li a {
+  color: #1E2833;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.0205rem;
+  line-height: normal;
+}
 .site-footer .footer-brand .logo {
   width: 12.8rem;
   height: 4.1rem;
@@ -1381,6 +1397,15 @@ section[id] {
   }
 }
 @media screen and (max-width: 480px) {
+  .site-footer .footer_group_link {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 8rem;
+    padding: 4rem 0;
+  }
+  .site-footer .footer_imp_links li a {
+    font-size: 1.6ren;
+  }
   .site-header .inner {
     width: 100%;
   }
@@ -1435,16 +1460,31 @@ section[id] {
 .terms_section {
   padding: 15rem 0 8rem;
 }
-.terms_section p,
+.terms_section ul {
+  margin: 0 0 1rem;
+  padding-left: 5rem;
+}
+.terms_section ul li {
+  list-style: disc;
+  font-size: 1.6rem;
+  margin: 0;
+}
 .terms_section h2 {
+  margin: 3rem 0 1rem !important;
+}
+.terms_section p,
+.terms_section h2,
+.terms_section li {
   margin: 3rem 0;
 }
 .terms_section p b,
-.terms_section h2 b {
+.terms_section h2 b,
+.terms_section li b {
   font-weight: 600;
 }
 .terms_section p a,
-.terms_section h2 a {
+.terms_section h2 a,
+.terms_section li a {
   text-decoration-line: underline;
   text-decoration-style: solid;
   text-decoration-skip-ink: none;
@@ -1453,7 +1493,8 @@ section[id] {
   text-underline-position: from-font;
 }
 .terms_section p,
-.terms_section h2 {
+.terms_section h2,
+.terms_section li {
   color: var(--Grey-700, #182230);
   font-size: 2rem;
   font-style: normal;

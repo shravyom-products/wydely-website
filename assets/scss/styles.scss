@@ -1170,6 +1170,28 @@ section[id] {
   padding: 5rem 0 0;
   background: $gradient-section-bg;
 
+
+  .footer_group_link {
+    display: flex;
+    gap: 8rem;
+  }
+
+  .footer_imp_links {
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    li a {
+      color: $color-text-footer;
+      font-size: 1.5rem;
+      font-weight: 400;
+      letter-spacing: -0.0205rem;
+      line-height: normal;
+    }
+  }
+
   .footer-brand {
     .logo {
       width: 12.8rem;
@@ -1573,6 +1595,18 @@ section[id] {
 }
 
 @media screen and (max-width: 480px) {
+  .site-footer .footer_group_link {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 8rem;
+    padding: 4rem 0;
+
+  }
+
+  .site-footer .footer_imp_links li a {
+    font-size: 1.6ren;
+  }
+
   .site-header .inner {
     width: 100%;
   }
@@ -1644,8 +1678,24 @@ section[id] {
 .terms_section {
   padding: 15rem 0 8rem;
 
-  p,
+  ul {
+    margin: 0 0 1rem;
+    padding-left: 5rem;
+
+    li {
+      list-style: disc;
+      font-size: 1.6rem;
+      margin: 0;
+    }
+  }
+
   h2 {
+    margin: 3rem 0 1rem !important;
+  }
+
+  p,
+  h2,
+  li {
     margin: 3rem 0;
 
     b {
