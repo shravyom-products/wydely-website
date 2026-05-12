@@ -1,0 +1,201 @@
+// ============================================================
+// _mixins.scss
+// ============================================================
+
+@use 'variables' as *;
+
+
+// ─── Responsive ────────────────────────────────────────────
+
+/// Mobile-first: styles apply at $bp and above
+@mixin respond-above($bp) {
+    @media (min-width: #{$bp}) {
+        @content;
+    }
+}
+
+/// Styles apply below $bp (max-width)
+@mixin respond-below($bp) {
+    @media (max-width: calc(#{$bp} - 0.1rem)) {
+        @content;
+    }
+}
+
+/// Named-breakpoint shorthand
+/// Usage: @include respond-to(md) { … }
+@mixin respond-to($name) {
+    $map: (
+        sm: $bp-sm,
+        md: $bp-md,
+        lg: $bp-lg,
+        xl: $bp-xl,
+        2xl: $bp-2xl,
+    );
+
+@if map-has-key($map, $name) {
+    @include respond-above(map-get($map, $name)) {
+        @content;
+    }
+}
+
+@else {
+    @warn 'Unknown breakpoint: #{$name}';
+}
+}
+
+
+// ─── Layout ────────────────────────────────────────────────
+
+@mixin flex($dir: row, $justify: flex-start, $align: center, $gap: 0) {
+    display: flex;
+    flex-direction: $dir;
+    justify-content: $justify;
+    align-items: $align;
+
+    @if $gap !=0 {
+        gap: $gap;
+    }
+}
+
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@mixin grid($cols: 1, $gap: $spacing-md) {
+    display: grid;
+    grid-template-columns: repeat($cols, 1fr);
+    gap: $gap;
+}
+
+
+// ─── Spacing ───────────────────────────────────────────────
+
+@mixin section-padding($v: $spacing-5xl) {
+    padding: $v 0;
+
+    @include respond-below($bp-md) {
+        padding: 7rem 0;
+    }
+}
+
+
+// ─── Typography ────────────────────────────────────────────
+
+@mixin truncate($lines: 1) {
+    @if $lines ==1 {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    @else {
+        display: -webkit-box;
+        -webkit-line-clamp: $lines;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+@mixin gradient-text($gradient: $gradient-primary) {
+    background: $gradient;
+    background-clip: text;
+    color: transparent;
+}
+
+@mixin label-caps($size: $fs-sm, $color: $color-primary) {
+    font-size: $size;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $color;
+}
+
+
+// ─── Accessibility ─────────────────────────────────────────
+
+@mixin visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@mixin clearfix {
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
+
+// ─── Components ────────────────────────────────────────────
+
+@mixin card-base {
+    border-radius: $radius-lg;
+    border: 1px solid $color-border-grey;
+    background: $color-surface;
+    transition: $transition;
+}
+
+@mixin hover-lift($y: -0.5rem, $shadow: $shadow-lg) {
+    &:hover {
+        transform: translateY($y);
+        box-shadow: $shadow;
+    }
+}
+
+@mixin btn-base {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-xs;
+    padding: 1rem 2rem;
+    border-radius: $radius-md;
+    border: none;
+    cursor: pointer;
+    font-size: $fs-md;
+    font-weight: 500;
+    line-height: 1.44rem;
+    white-space: nowrap;
+    text-align: center;
+    text-decoration: none;
+    transition: $transition;
+}
+
+// Badge pill shared between section tags and tab-card badges
+@mixin badge-pill($color: $color-brand-green, $bg: $color-brand-green-bg, $border: $color-brand-green) {
+    display: inline-block;
+    padding: $spacing-xs 2.7rem;
+    border-radius: $radius-pill;
+    background: $bg;
+    border: 1px solid $border;
+    color: $color;
+    font-size: $fs-sm;
+    font-weight: 400;
+    line-height: $fs-sm;
+}
+
+// Hamburger bar
+@mixin toggler-bar($width) {
+    display: block;
+    width: $width;
+    height: 0.2rem;
+    background: rgba(#000000, 0.85);
+    border-radius: 0.2rem;
+    transition: $transition;
+}
