@@ -238,7 +238,7 @@ section[id] {
 .brand-logo {
   img {
     width: 7.5rem;
-    height: 2.4rem;
+    height: 3.4rem;
     aspect-ratio: 25 / 8;
   }
 }
@@ -860,10 +860,10 @@ section[id] {
     padding: 2.3rem;
     margin-bottom: 0;
     color: #52525B;
-    font-size: $fs-sm;
+    font-size: $fs-md;
     font-weight: 400;
     line-height: 2rem;
-    letter-spacing: -0.04rem;
+    letter-spacing: 0.04rem;
   }
 
   .accordion-button {
@@ -1052,7 +1052,7 @@ section[id] {
 
   p {
     margin: 0;
-    font-size: $fs-sm;
+    font-size: 1.2rem;
   }
 
   .btn-close {
@@ -1072,8 +1072,12 @@ section[id] {
 
   .form-label {
     margin-bottom: $spacing-xs;
-    color: $color-text;
-    font-size: $fs-sm;
+    color: var(--Grey-400, #667085);
+    font-size: 1.4rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 2.5rem;
+    /* 178.571% */
   }
 
   .required-star {
@@ -1089,6 +1093,15 @@ section[id] {
     color: $color-text;
     font-size: $fs-sm;
     transition: $transition;
+
+    &:placeholder-shown,
+    &:placeholder {
+      color: var(--Grey-300, #98A2B3);
+      font-size: 1.6rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 2.5rem;
+    }
 
     &:focus {
       border-color: $color-primary;
@@ -1123,15 +1136,44 @@ section[id] {
   }
 }
 
+.whatsapp_section {
+  .--item {
+    border: 1px solid #D0D5DD;
+    background: #FFF;
+    padding: 3.7rem;
+    border-radius: 1.6rem;
+
+    .heading {
+      color: #104502;
+      font-size: 4.2rem;
+      font-weight: 500;
+      line-height: normal;
+      text-align: center;
+    }
+
+    .text {
+      padding-right: 6rem;
+      color: #344054;
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: normal;
+      text-align: center;
+      padding: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
 .form-success {
   padding: $spacing-md 0;
   text-align: center;
 
   .success-icon {
     @include flex-center;
-    width: 6.4rem;
-    height: 6.4rem;
+    width: 5rem;
+    height: 5rem;
     border-radius: 50%;
+    background: var(--Primary-600, #155A03);
     color: $color-surface;
     font-size: $fs-lg;
     margin: 0 auto 2rem;
@@ -1139,7 +1181,7 @@ section[id] {
   }
 
   h3 {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     font-weight: 800;
     margin-bottom: $spacing-xs;
   }
@@ -1147,7 +1189,7 @@ section[id] {
   p {
     margin: 0;
     color: $color-text-muted;
-    font-size: 0.9rem;
+    font-size: $fs-sm;
   }
 }
 
@@ -1170,10 +1212,16 @@ section[id] {
   padding: 5rem 0 0;
   background: $gradient-section-bg;
 
+  .footer_link_title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+  }
 
   .footer_group_link {
     display: flex;
     gap: 8rem;
+
   }
 
   .footer_imp_links {
@@ -1195,8 +1243,8 @@ section[id] {
   .footer-brand {
     .logo {
       width: 12.8rem;
-      height: 4.1rem;
-      aspect-ratio: 128 / 41;
+      height: 5rem;
+      aspect-ratio: 128 / 50;
     }
 
     .text {
@@ -1210,7 +1258,8 @@ section[id] {
   }
 
   .footer-social {
-    @include flex(row, flex-end, center, 2rem);
+    margin-top: 2rem;
+    @include flex(row, flex-start, center, 2rem);
   }
 
   .footer-links {
@@ -1239,8 +1288,22 @@ section[id] {
   letter-spacing: -0.0205rem;
   text-align: center;
   line-height: normal;
-  opacity: 0.5;
+
+  position: relative;
+
+  p {
+    opacity: 0.5;
+  }
+
+  .mii {
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
 }
+
 
 
 // --- 16. MOBILE MENU -----------------------------------------
@@ -1718,4 +1781,46 @@ section[id] {
     line-height: 3rem;
 
   }
+}
+
+.flip_animation {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 2.7rem;
+  vertical-align: bottom;
+  min-width: 100%;
+  margin-bottom: 2rem;
+}
+
+.flip_animation span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  white-space: nowrap;
+  gap: 1rem;
+  color: #0F1114;
+  font-size: 1.6rem;
+  line-height: 2.7rem;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.35s ease;
+  align-items: center;
+
+  img {
+    height: 2rem;
+    width: auto;
+  }
+}
+
+.flip_animation span.is-active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.flip_animation span.is-exit {
+  transform: translateY(-110%);
+  opacity: 0;
 }

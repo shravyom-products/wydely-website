@@ -42,6 +42,7 @@ const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
  */
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
+  initFlipAnimation();
   initSwiper();
   initFormValidation();
   initModalReset();
@@ -429,6 +430,38 @@ function initSwiper() {
 }
 
 
+/* ─── 5b. FLIP ANIMATION TICKER ───────────────────────────── */
+
+function initFlipAnimation() {
+  const container = document.querySelector('.flip_animation');
+  if (!container) return;
+
+  const spans = Array.from(container.querySelectorAll('span'));
+  if (spans.length < 2) return;
+
+  let current = 0;
+  spans[current].classList.add('is-active');
+
+  setInterval(() => {
+    const prev = current;
+    current = (current + 1) % spans.length;
+
+    // Exit: slide current item upward
+    spans[prev].classList.add('is-exit');
+    spans[prev].classList.remove('is-active');
+
+    // Enter: slide next item up from below
+    spans[current].classList.remove('is-exit');
+    spans[current].classList.add('is-active');
+
+    // After transition ends, reset exited span to bottom so it re-enters from below
+    setTimeout(() => {
+      spans[prev].classList.remove('is-exit');
+    }, 460);
+  }, 3000);
+}
+
+
 /* ─── 6. FORM VALIDATION ───────────────────────────────────── */
 
 /**
@@ -473,9 +506,21 @@ function initFormValidation() {
       validate(val) {
         const v = val.trim();
         if (!v) return 'Phone number is required.';
-        // Accepts formats: +1 (555) 000-0000 · 555-000-0000 · +44 20 7946 0958
-        const re = /^\+?[\d\s\-().]{7,20}$/;
-        if (!re.test(v)) return 'Please enter a valid phone number (7–20 digits).';
+        // 10-digit Indian mobile number starting with 6–9
+        const re = /^[6-9]\d{9}$/;
+        if (!re.test(v)) return 'Please enter a valid 10-digit mobile number (e.g. 9876543210).';
+        return null;
+      },
+    },
+    {
+      input: $('#demoWebsite'),
+      errorEl: $('#websiteError'),
+      validate(val) {
+        const v = val.trim();
+        if (!v) return 'Website URL is required.';
+        // Accepts formats: https://www.example.com · http://example.com
+        const re = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
+        if (!re.test(v)) return 'Please enter a valid website URL.';
         return null;
       },
     },
@@ -541,35 +586,58 @@ function validateField(input, errorEl, validate) {
 }
 
 /**
- * Simulate async form submission (replace the setTimeout with a real fetch call).
+ * Submit the demo form to the API.
  */
-function submitForm(form) {
+async function submitForm(form) {
   const submitBtn = form.querySelector('.btn-submit');
   const labelEl = form.querySelector('.btn-label');
   const spinnerEl = form.querySelector('.btn-spinner');
+  const errorEl = $('#formError');
 
-  // Show loading state
+  // Show loading state and hide any previous error
   submitBtn.disabled = true;
   labelEl.hidden = true;
   spinnerEl.hidden = false;
+  if (errorEl) errorEl.hidden = true;
 
-  /*
-   * Replace this block with a real API call, e.g.:
-   *
-   * fetch('/api/demo-request', {
-   *   method: 'POST',
-   *   headers: { 'Content-Type': 'application/json' },
-   *   body: JSON.stringify({
-   *     name:  form.querySelector('#demoName').value.trim(),
-   *     email: form.querySelector('#demoEmail').value.trim(),
-   *     phone: form.querySelector('#demoPhone').value.trim(),
-   *   }),
-   * })
-   * .then(res => { if (!res.ok) throw new Error('Network error'); return res.json(); })
-   * .then(() => showSuccess(form))
-   * .catch(() => { ... handle error ... });
-   */
-  setTimeout(() => showSuccess(form), 1500);
+  const payload = {
+    name: $('#demoName').value.trim(),
+    companyWebsite: (() => {
+      let url = $('#demoWebsite').value.trim();
+      if (url && !/^https?:\/\//i.test(url)) {
+        url = `https://www.${url}`;
+      }
+      return url;
+    })(),
+    companyMail: $('#demoEmail').value.trim(),
+    // Prepend India country code before sending
+    companyWhatsappNumber: `91${$('#demoPhone').value.trim()}`,
+  };
+
+  try {
+    const res = await fetch('https://api.wydely.io/api/v1/book-demo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      showSuccess(form);
+    } else {
+      throw new Error(data.message || 'Submission failed.');
+    }
+  } catch {
+    // Restore button state and surface the error to the user
+    submitBtn.disabled = false;
+    labelEl.hidden = false;
+    spinnerEl.hidden = true;
+    if (errorEl) {
+      errorEl.textContent = 'Something went wrong. Please try again.';
+      errorEl.hidden = false;
+    }
+  }
 }
 
 function showSuccess(form) {
@@ -606,6 +674,10 @@ function initModalReset() {
     if (submitBtn) submitBtn.disabled = false;
     if (labelEl) labelEl.hidden = false;
     if (spinnerEl) spinnerEl.hidden = true;
+
+    // Clear any API error message
+    const errorEl = $('#formError');
+    if (errorEl) { errorEl.textContent = ''; errorEl.hidden = true; }
   });
 }
 
